@@ -22,6 +22,11 @@ def password():
 
 
 @pytest.fixture
+def company():
+    return "QA 134.2"
+
+
+@pytest.fixture
 def test_email():
     return "vitsch@yandex.ru"
 
@@ -34,3 +39,8 @@ def project():
 @pytest.fixture
 def depart():
     return "456"
+
+
+@pytest.fixture
+def base_url():
+    return "https://ru.yougile.com"
