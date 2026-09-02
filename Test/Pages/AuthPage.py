@@ -224,9 +224,10 @@ class AuthPage:
                 By.XPATH, '//div[@role="button"][contains(normalize-space(), "Сохранить изменения")]').click()
 
     @allure.step("FT. Открытие страницы сотрудника и переход до блока Проекты")
-    def employee_page(self, email: str, project: str) -> None:
+    def employee_page(self, email: str, project: str) -> list:
         """
         Метод служит для открытия личной страницы сотрудника и скрол до блока Участник проектов.
+        Ищет и возвращает WebElement, обознаючающий включение сотрудника в проект.
         :param email: str - почта тестового сотрудника.
         :param project: str - наименование тестового проекта.
         """
@@ -248,6 +249,12 @@ class AuthPage:
                 EC.presence_of_element_located((By.XPATH, f'//span[normalize-space()="{project}"]')))
             actions = ActionChains(self.__driver)
             actions.move_to_element(element).perform()
+            WebDriverWait(self.__driver, 10).until(
+                EC.visibility_of_element_located((
+                    By.XPATH, "//div[@class='prj-invite prj-invite--user']//div[1]//div[2]//div[1]//div[1]//div[1]")))
+            check = self.__driver.find_element(
+                By.XPATH, "//div[@class='prj-invite prj-invite--user']//div[1]//div[2]//div[1]//div[1]//div[1]")
+            return check
 
     @allure.step("FT. Удаление тестового проекта")
     def del_project(self, project: str) -> None:
@@ -407,9 +414,10 @@ class AuthPage:
                 By.XPATH, '//div[@role="button" and normalize-space() = "Сохранить изменения"]').click()
 
     @allure.step("FT. Открытие окна свойств сотрудника и переход до блока Состоит в отделах")
-    def employee_current_department(self, email: str, depart: str) -> None:
+    def employee_current_department(self, email: str, depart: str) -> list:
         """
-        Метод служит для открытия окна свойств тестового сотрудника и переход до блока Состоит в отделах.
+        Метод служит для открытия окна свойств тестового сотрудника и перехода до блока Состоит в отделах.
+        Ищет и возвращает WebElement, обознаючающий включение сотрудника в отдел.
         :param email: str - почта тестового сотрудника.
         :param depart: str - наименование тестового отдела.
         """
@@ -432,6 +440,9 @@ class AuthPage:
                                                                  f'//span[contains(@class, "prj-invite__item-text") and normalize-space(.) = "{depart}"]')))
             actions = ActionChains(self.__driver)
             actions.move_to_element(element).perform()
+            WebDriverWait(self.__driver, 10).until(EC.visibility_of_element_located((By.XPATH, "(//div[@class='prj-invite-role__name'])[1]")))
+            check = self.__driver.find_element(By.XPATH, "(//div[@class='prj-invite-role__name'])[1]")
+            return check
 
     @allure.step("FT. Удаление тестового отдела")
     def del_department(self, depart: str) -> None:
@@ -467,3 +478,11 @@ class AuthPage:
         with allure.step("FT. Ожидание обновления станицы"):
             WebDriverWait(self.__driver, 20).until(
                 EC.staleness_of(self.__driver.find_element(By.XPATH, f'//div[normalize-space() = "{depart}"]')))
+
+    @allure.step("FT. Закрытие окна свойств сотрудника")
+    def close_employee_page(self) -> None:
+        """
+        Метод служит для закрывания окна свойств сотрудника.
+        """
+        with allure.step("FT. Нажатие на иконку закрытия"):
+            self.__driver.find_element(By.XPATH, "//div[@class='prj-invite__close']").click()

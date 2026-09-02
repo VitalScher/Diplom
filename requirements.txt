@@ -1,5 +1,6 @@
-pytest: pytest~=9.1.1
-selenium: selenium ~=4.45.0
-faker: faker ~=40.23.0
-requests: requests ~=2.34.2
-allure-pytest: allure-pytest ~=2.16.0
+pytest ~=9.1.1
+selenium ~=4.45.0
+faker ~=40.23.0
+requests ~=2.34.2
+allure-pytest ~=2.16.0
+faker ~=40.23.0
